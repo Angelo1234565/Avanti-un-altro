@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+      <!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gioco Finale - Avanti un Cazzo</title>
+    <title>Gioco Finale - Avanti un Altro</title>
     <style>
         body {
             text-align: center;
@@ -68,7 +68,7 @@
 </head>
 <body>
 
-    <h1>🎯 Gioco Finale - Avanti un Cazzo 🎯</h1>
+    <h1>🎯 Gioco Finale - Avanti un Altro 🎯</h1>
 
     <audio id="sigla" src="siglagioco.mp4"></audio>
     <audio id="musicaFinale" src="musica_finale.mp3" loop></audio>
@@ -85,8 +85,20 @@
         const sigla = document.getElementById("sigla");
         const musicaFinale = document.getElementById("musicaFinale");
 
+        // Funzione per avviare la sigla (con gestione dei blocchi del browser)
+        function avviaAudio() {
+            sigla.play().then(() => {
+                console.log("Audio avviato automaticamente");
+            }).catch(() => {
+                console.log("Autoplay bloccato, avvio al primo click");
+                document.addEventListener("click", function() {
+                    sigla.play();
+                }, { once: true });
+            });
+        }
+
         window.onload = function() {
-            sigla.play();
+            avviaAudio();
             sigla.onended = function() {
                 musicaFinale.play();
                 creaGriglia();
@@ -123,7 +135,7 @@
                 box.forEach(b => b.classList.remove("corretto", "errato", "ultima-raggiunta")); // Reset colori
                 box[corrente].classList.add("errato"); // Mostra l'errore
                 setTimeout(() => {
-                    box[corrente].classList.remove("errato"); // Rimuove il rosso dopo un secondo
+                    box[corrente].classList.remove("errato"); // Rimuove il rosso dopo 1 secondo
                     corrente = 0;
                     evidenziaUltima();
                 }, 1000);
