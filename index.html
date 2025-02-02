@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gioco Finale - Avanti un Altro</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #222;
+            color: white;
+        }
+        #griglia {
+            display: grid;
+            grid-template-columns: repeat(11, 50px);
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .box {
+            width: 50px;
+            height: 50px;
+            background-color: gray;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+        .corretto {
+            background-color: green;
+        }
+        .errato {
+            background-color: red;
+        }
+        button {
+            margin: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Gioco Finale - Avanti un Altro</h1>
+
+    <audio id="sigla" src="sigla.mp3"></audio>
+    <audio id="musicaFinale" src="musica_finale.mp3" loop></audio>
+
+    <button onclick="iniziaGioco()">Inizia Gioco</button>
+
+    <div id="griglia"></div>
+
+    <button onclick="rispondi(true)">Corretta</button>
+    <button onclick="rispondi(false)">Errata</button>
+
+    <script>
+        let corrente = 0;
+        let caselle = [];
+
+        function iniziaGioco() {
+            corrente = 0;
+            document.getElementById("griglia").innerHTML = "";
+            document.getElementById("sigla").play();
+            setTimeout(() => {
+                document.getElementById("musicaFinale").play();
+            }, 5000); // Dopo la sigla
+
+            for (let i = 0; i < 22; i++) {
+                let box = document.createElement("div");
+                box.classList.add("box");
+                box.innerText = i + 1;
+                document.getElementById("griglia").appendChild(box);
+                caselle.push(box);
+            }
+        }
+
+        function rispondi(esatta) {
+            if (caselle.length === 0) return;
+
+            if (esatta) {
+                caselle[0].classList.add("corretto");
+                caselle.shift();
+            } else {
+                caselle.forEach(b => b.classList.remove("corretto", "errato"));
+                caselle.forEach(b => b.classList.add("errato"));
+                setTimeout(() => {
+                    iniziaGioco();
+                }, 1000);
+            }
+        }
+    </script>
+
+</body>
+</html>
