@@ -42,11 +42,6 @@
             transform: scale(1.1);
             color: white;
         }
-        .errato {
-            background-color: #f44336;
-            transform: scale(1.1);
-            color: white;
-        }
         button {
             margin: 10px;
             padding: 15px 30px;
@@ -60,11 +55,6 @@
         }
         button:hover {
             background-color: #0056b3;
-        }
-        #timer {
-            font-size: 24px;
-            margin-top: 20px;
-            font-weight: bold;
         }
     </style>
 </head>
@@ -80,24 +70,18 @@
     <button onclick="rispondi(true)">✔ Corretta</button>
     <button onclick="rispondi(false)">✘ Errata</button>
 
-    <div id="timer">⏱️ Tempo: 60s</div>
-
     <script>
         let corrente = 0;
         const totaleDomande = 22;
-        let tempo = 60;
-        let intervallo;
 
         const sigla = document.getElementById("sigla");
         const musicaFinale = document.getElementById("musicaFinale");
-        const timerEl = document.getElementById("timer");
 
         window.onload = function() {
             sigla.play();
             sigla.onended = function() {
                 musicaFinale.play();
                 creaGriglia();
-                avviaTimer();
             };
         };
 
@@ -122,32 +106,13 @@
                     corrente++;
 
                     if (corrente === totaleDomande) {
-                        clearInterval(intervallo);
                         alert("🎉 Complimenti, hai vinto il gioco finale! 🎉");
                     }
                 }
             } else {
-                box.forEach(b => b.classList.remove("corretto", "errato")); // Reset di tutti i quadrati
-                box[0].classList.add("errato"); // Il primo diventa rosso
+                box.forEach(b => b.classList.remove("corretto")); // Reset colori
                 corrente = 0;
             }
-        }
-
-        function avviaTimer() {
-            clearInterval(intervallo);
-            intervallo = setInterval(() => {
-                tempo--;
-                timerEl.innerText = `⏱️ Tempo: ${tempo}s`;
-
-                if (tempo <= 0) {
-                    clearInterval(intervallo);
-                    alert("⏰ Tempo scaduto! Riprova!");
-                    creaGriglia();
-                    corrente = 0;
-                    tempo = 60;
-                    avviaTimer();
-                }
-            }, 1000);
         }
 
         // Creazione della griglia all'avvio
