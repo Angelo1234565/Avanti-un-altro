@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gioco Finale - Avanti un Altro</title>
+    <title>Gioco Finale - Avanti un Cazzo</title>
     <style>
         body {
             text-align: center;
@@ -45,12 +45,10 @@
 </head>
 <body>
 
-    <h1>Gioco Finale - Avanti un Altro</h1>
+    <h1>Gioco Finale - Avanti un Cazzo</h1>
 
-    <audio id="sigla" src="ok.mp3"></audio>
-    <audio id="musicaFinale" src="Avanti un Altro Soundtrack Game Show - Gioco finale.mp3" loop></audio>
-
-    <button onclick="iniziaGioco()">Inizia Gioco</button>
+    <audio id="sigla" src="ok.mp4"></audio>
+    <audio id="musicaFinale" src="Avanti un Altro Soundtrack Game Show - Gioco finale.mp4" loop></audio>
 
     <div id="griglia"></div>
 
@@ -59,37 +57,45 @@
 
     <script>
         let corrente = 0;
-        let caselle = [];
+        const totaleDomande = 22;
+        const sigla = document.getElementById("sigla");
+        const musicaFinale = document.getElementById("musicaFinale");
+
+        // Avvia la sigla appena caricato il gioco
+        window.onload = function() {
+            sigla.play();
+            sigla.onended = function() {
+                musicaFinale.play();
+                iniziaGioco();
+            };
+        };
 
         function iniziaGioco() {
             corrente = 0;
-            document.getElementById("griglia").innerHTML = "";
-            document.getElementById("sigla").play();
-            setTimeout(() => {
-                document.getElementById("musicaFinale").play();
-            }, 5000); // Dopo la sigla
+            const griglia = document.getElementById("griglia");
+            griglia.innerHTML = "";
 
-            for (let i = 0; i < 22; i++) {
-                let box = document.createElement("div");
+            for (let i = 0; i < totaleDomande; i++) {
+                const box = document.createElement("div");
                 box.classList.add("box");
                 box.innerText = i + 1;
-                document.getElementById("griglia").appendChild(box);
-                caselle.push(box);
+                griglia.appendChild(box);
             }
         }
 
         function rispondi(esatta) {
-            if (caselle.length === 0) return;
+            const box = document.querySelectorAll(".box");
 
             if (esatta) {
-                caselle[0].classList.add("corretto");
-                caselle.shift();
+                if (corrente < totaleDomande) {
+                    box[corrente].classList.add("corretto");
+                    corrente++;
+                }
             } else {
-                caselle.forEach(b => b.classList.remove("corretto", "errato"));
-                caselle.forEach(b => b.classList.add("errato"));
-                setTimeout(() => {
-                    iniziaGioco();
-                }, 1000);
+                // Reset in caso di risposta errata
+                corrente = 0;
+                box.forEach(b => b.classList.remove("corretto", "errato"));
+                box[0].classList.add("errato");
             }
         }
     </script>
