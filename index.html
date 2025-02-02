@@ -104,6 +104,54 @@
         #avvia-audio:hover {
             background-color: #e6b800;
         }
+
+        /* Stile messaggio finale */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        #messaggio-finale {
+            background: linear-gradient(45deg, #ffcc00, #ff9900);
+            color: black;
+            font-size: 28px;
+            font-weight: bold;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(255, 204, 0, 0.9);
+            animation: pop-up 0.5s ease-out;
+        }
+
+        @keyframes pop-up {
+            0% { transform: scale(0.7); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        #chiudi-messaggio {
+            display: block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: black;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        #chiudi-messaggio:hover {
+            background: red;
+        }
+
     </style>
 </head>
 <body>
@@ -172,7 +220,7 @@
                     evidenziaUltima();
 
                     if (corrente === totaleDomande) {
-                        alert("🎉 Complimenti, hai vinto il gioco finale! 🎉");
+                        mostraMessaggioFinale();
                     }
                 }
             } else {
@@ -198,5 +246,4 @@
         creaGriglia();
     </script>
 
-</body>
-</html>
+</body
