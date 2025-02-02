@@ -8,71 +8,80 @@
         body {
             text-align: center;
             font-family: Arial, sans-serif;
-            background-color: #111;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
             color: white;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            margin-top: 20px;
+            font-size: 36px;
+            text-shadow: 2px 2px 4px black;
         }
         #griglia {
             display: grid;
-            grid-template-columns: repeat(11, 50px);
-            gap: 10px;
+            grid-template-columns: repeat(11, 60px);
+            gap: 15px;
             justify-content: center;
-            margin: 20px auto;
+            margin: 30px auto;
         }
         .box {
-            width: 50px;
-            height: 50px;
-            background-color: gray;
+            width: 60px;
+            height: 60px;
+            background-color: #444;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
-            border-radius: 5px;
+            border-radius: 8px;
             border: 3px solid white;
             transition: background-color 0.3s, transform 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
         }
         .corretto {
-            background-color: green;
+            background-color: #28a745;
             transform: scale(1.1);
         }
         .errato {
-            background-color: red;
+            background-color: #dc3545;
             transform: scale(1.1);
         }
         button {
-            margin: 10px;
+            margin: 15px 10px;
             padding: 15px 30px;
             font-size: 18px;
             cursor: pointer;
             border: none;
             border-radius: 8px;
-            background-color: #007bff;
-            color: white;
-            transition: background-color 0.3s;
+            background-color: #ffc107;
+            color: black;
+            transition: background-color 0.3s, transform 0.2s;
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: #e0a800;
+            transform: scale(1.05);
         }
         #timer {
-            font-size: 24px;
-            margin-top: 20px;
+            font-size: 28px;
             font-weight: bold;
+            margin: 20px;
         }
     </style>
 </head>
 <body>
 
-    <h1>Gioco Finale - Avanti un Altro</h1>
+    <h1>🎯 Gioco Finale - Avanti un Altro 🎯</h1>
 
-    <audio id="sigla" src="ok.mp4"></audio>
-    <audio id="musicaFinale" src="Avanti un Altro Soundtrack Game Show - Gioco finale.mp4" loop></audio>
+    <audio id="sigla" src="sigla.mp3"></audio>
+    <audio id="musicaFinale" src="musica_finale.mp3" loop></audio>
 
     <div id="griglia"></div>
 
     <button onclick="rispondi(true)">✔ Corretta</button>
     <button onclick="rispondi(false)">✘ Errata</button>
 
-    <div id="timer">Tempo: 60s</div>
+    <div id="timer">⏱️ Tempo: 60s</div>
 
     <script>
         let corrente = 0;
@@ -129,7 +138,7 @@
         function avviaTimer() {
             intervallo = setInterval(() => {
                 tempo--;
-                timerEl.innerText = `Tempo: ${tempo}s`;
+                timerEl.innerText = `⏱️ Tempo: ${tempo}s`;
 
                 if (tempo <= 0) {
                     clearInterval(intervallo);
