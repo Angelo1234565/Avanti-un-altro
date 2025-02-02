@@ -160,6 +160,7 @@
 
     <audio id="sigla" src="siglagioco.mp4"></audio>
     <audio id="musicaFinale" src="musica_finale.mp3" loop></audio>
+    <audio id="erroreAudio" src="errore.mp4"></audio> <!-- Audio di errore -->
 
     <div id="griglia"></div>
 
@@ -173,6 +174,7 @@
 
         const sigla = document.getElementById("sigla");
         const musicaFinale = document.getElementById("musicaFinale");
+        const erroreAudio = document.getElementById("erroreAudio"); // Aggiunto per errore
         const btnAudio = document.getElementById("avvia-audio");
 
         function avviaAudio() {
@@ -224,6 +226,7 @@
                     }
                 }
             } else {
+                erroreAudio.play(); // Riproduce l'audio di errore
                 box.forEach(b => b.classList.remove("corretto", "errato", "ultima-raggiunta"));
                 box[corrente].classList.add("errato");
                 setTimeout(() => {
@@ -243,7 +246,26 @@
             }
         }
 
+        function mostraMessaggioFinale() {
+            const messaggio = document.createElement("div");
+            messaggio.innerHTML = `
+                <div id="overlay">
+                    <div id="messaggio-finale">
+                        🎉 <b>HAI VINTO!</b> 🎉 <br>
+                        Sei un vero campione! 🏆 <br>
+                        <span id="chiudi-messaggio">Chiudi</span>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(messaggio);
+
+            document.getElementById("chiudi-messaggio").onclick = function() {
+                document.getElementById("overlay").remove();
+            };
+        }
+
         creaGriglia();
     </script>
 
-</body
+</body>
+</html>
