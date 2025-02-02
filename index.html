@@ -1,4 +1,4 @@
-      <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
@@ -64,6 +64,17 @@
         button:hover {
             background-color: #0056b3;
         }
+        #avvia-audio {
+            font-size: 14px;
+            padding: 5px 10px;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #28a745;
+        }
+        #avvia-audio:hover {
+            background-color: #218838;
+        }
     </style>
 </head>
 <body>
@@ -77,6 +88,7 @@
 
     <button onclick="rispondi(true)">✔ Corretta</button>
     <button onclick="rispondi(false)">✘ Errata</button>
+    <button id="avvia-audio" onclick="forzaAudio()">🔊 Avvia Audio</button>
 
     <script>
         let corrente = 0;
@@ -84,17 +96,23 @@
 
         const sigla = document.getElementById("sigla");
         const musicaFinale = document.getElementById("musicaFinale");
+        const btnAudio = document.getElementById("avvia-audio");
 
-        // Funzione per avviare la sigla (con gestione dei blocchi del browser)
         function avviaAudio() {
             sigla.play().then(() => {
                 console.log("Audio avviato automaticamente");
+                btnAudio.style.display = "none"; // Nasconde il pulsante se parte da solo
             }).catch(() => {
-                console.log("Autoplay bloccato, avvio al primo click");
-                document.addEventListener("click", function() {
-                    sigla.play();
-                }, { once: true });
+                console.log("Autoplay bloccato, usa il pulsante per avviare l'audio.");
+                btnAudio.style.display = "block"; // Mostra il pulsante se l'autoplay fallisce
             });
+        }
+
+        function forzaAudio() {
+            sigla.play().then(() => {
+                console.log("Audio avviato manualmente");
+                btnAudio.style.display = "none"; // Nasconde il pulsante dopo l'avvio
+            }).catch(err => console.error("Errore nell'avvio dell'audio:", err));
         }
 
         window.onload = function() {
