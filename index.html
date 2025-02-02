@@ -96,13 +96,12 @@
             sigla.play();
             sigla.onended = function() {
                 musicaFinale.play();
-                iniziaGioco();
+                creaGriglia();
                 avviaTimer();
             };
         };
 
-        function iniziaGioco() {
-            corrente = 0;
+        function creaGriglia() {
             const griglia = document.getElementById("griglia");
             griglia.innerHTML = "";
 
@@ -128,13 +127,14 @@
                     }
                 }
             } else {
+                box.forEach(b => b.classList.remove("corretto", "errato")); // Reset di tutti i quadrati
+                box[0].classList.add("errato"); // Il primo diventa rosso
                 corrente = 0;
-                box.forEach(b => b.classList.remove("corretto", "errato"));
-                box[0].classList.add("errato");
             }
         }
 
         function avviaTimer() {
+            clearInterval(intervallo);
             intervallo = setInterval(() => {
                 tempo--;
                 timerEl.innerText = `⏱️ Tempo: ${tempo}s`;
@@ -142,12 +142,16 @@
                 if (tempo <= 0) {
                     clearInterval(intervallo);
                     alert("⏰ Tempo scaduto! Riprova!");
-                    iniziaGioco();
+                    creaGriglia();
+                    corrente = 0;
                     tempo = 60;
                     avviaTimer();
                 }
             }, 1000);
         }
+
+        // Creazione della griglia all'avvio
+        creaGriglia();
     </script>
 
 </body>
