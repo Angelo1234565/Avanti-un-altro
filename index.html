@@ -162,6 +162,8 @@
     <audio id="musicaFinale" src="musica_finale.mp3" loop></audio>
     <audio id="erroreAudio" src="errore.mp4"></audio> <!-- Audio di errore -->
 
+    <div id="domanda"></div> <!-- Qui verrà visualizzata la domanda -->
+
     <div id="griglia"></div>
 
     <button class="btn-corretta" onclick="rispondi(true)">✔ Corretta</button>
@@ -169,36 +171,37 @@
     <button id="avvia-audio" onclick="forzaAudio()">🔊 Avvia Audio</button>
 
     <script>
-        let corrente = 0;
-        const totaleDomande = 22;
         const domande = [
-            { domanda: "Delle Femmine o degli Scapoli, quale isola esiste davvero?", risposta: "Femmine" },
-            { domanda: "Goed o Went, qual è il past simple del verbo “to go”?", risposta: "Went" },
-            { domanda: "Asinello o Ciuchino, chi è l’amico di Shrek?", risposta: "Ciuchino" },
-            { domanda: "Hanks o Cruise, chi interpreta Forrest gump?", risposta: "Hanks" },
-            { domanda: "Pari o Dispari, i 7 nani sono?", risposta: "Dispari" },
-            { domanda: "Stark o Effe, qual’è il cognome di Ironman?", risposta: "Stark" },
-            { domanda: "Evans o Hemsworth, quale Chris è Captain America?", risposta: "Evans" },
-            { domanda: "Gatto o Topo, in cosa si trasforma la prof. Mcgranitt?", risposta: "Gatto" },
-            { domanda: "Di Caprio o Da Vinci, chi ha dipinto la gioconda?", risposta: "Da Vinci" },
-            { domanda: "Frecce o Lance, cosa usa Katniss Everdeen?", risposta: "Frecce" },
-            { domanda: "Fragole o Bambolina, come si chiama la canzone di Achille Lauro?", risposta: "Fragole" },
-            { domanda: "Fuori o Dentro, dove si trova il mare di Napoli nella famosa fiction?", risposta: "Fuori" },
-            { domanda: "Teresa o Carmela, chi è l’amante di Edoardo?", risposta: "Teresa" },
-            { domanda: "Osso o Orso, cosa significa “Oso” in spagnolo?", risposta: "Orso" },
-            { domanda: "Holland o Hiddleston, quale Tom è il tuo amichevole Spiderman di quartiere?", risposta: "Holland" },
-            { domanda: "Jacob o Carlisle, chi ha l'imprinting con Renesmee?", risposta: "Jacob" },
-            { domanda: "2009 o 2010, in che anno è nato il gruppo il Volo?", risposta: "2009" },
-            { domanda: "Malgioglio o Enzo Miccio, chi ha condotto “Ma come ti vesti”?", risposta: "Enzo Miccio" },
-            { domanda: "Fiordaliso o Fiordipesco, chi è la promessa sposa di Febo?", risposta: "Fiordaliso" },
-            { domanda: "Mahmood o Ghali, quale dei due manzi ha vinto Sanremo con Blanco?", risposta: "Mahmood" },
-            { domanda: "Vanoni o Ferilli, chi è il nostro spirito guida di sempre?", risposta: "Vanoni" },
-            { domanda: "Musical o Cinepanettone, “Mamma Mia” è un..?", risposta: "Musical" }
+            { domanda: "Delle Femmine o degli Scapoli, quale isola esiste davvero?", rispostaCorretta: "Femmine" },
+            { domanda: "Goed o Went, qual è il past simple del verbo “to go”?", rispostaCorretta: "Went" },
+            { domanda: "Asinello o Ciuchino, chi è l’amico di Shrek?", rispostaCorretta: "Ciuchino" },
+            { domanda: "Hanks o Cruise, chi interpreta Forrest gump?", rispostaCorretta: "Hanks" },
+            { domanda: "Pari o Dispari, i 7 nani sono?", rispostaCorretta: "Dispari" },
+            { domanda: "Stark o Effe, qual’è il cognome di Ironman?", rispostaCorretta: "Stark" },
+            { domanda: "Evans o Hemsworth, quale Chris è Captain America?", rispostaCorretta: "Evans" },
+            { domanda: "Gatto o Topo, in cosa si trasforma la prof. Mcgranitt?", rispostaCorretta: "Gatto" },
+            { domanda: "Di Caprio o Da Vinci, chi ha dipinto la gioconda?", rispostaCorretta: "Da Vinci" },
+            { domanda: "Frecce o Lance, cosa usa Katniss Everdeen?", rispostaCorretta: "Frecce" },
+            { domanda: "Fragole o Bambolina, come si chiama la canzone di Achille Lauro?", rispostaCorretta: "Fragole" },
+            { domanda: "Fuori o Dentro, dove si trova il mare di Napoli nella famosa fiction?", rispostaCorretta: "Fuori" },
+            { domanda: "Teresa o Carmela, chi è l’amante di Edoardo?", rispostaCorretta: "Teresa" },
+            { domanda: "Osso o Orso, cosa significa “Oso” in spagnolo?", rispostaCorretta: "Orso" },
+            { domanda: "Holland o Hiddleston, quale Tom è il tuo amichevole Spiderman di quartiere?", rispostaCorretta: "Holland" },
+            { domanda: "Jacob o Carlisle, chi ha l'imprinting con Renesmee?", rispostaCorretta: "Jacob" },
+            { domanda: "2009 o 2010, in che anno è nato il gruppo il Volo?", rispostaCorretta: "2009" },
+            { domanda: "Malgioglio o Enzo Miccio, chi ha condotto “Ma come ti vesti”?", rispostaCorretta: "Enzo Miccio" },
+            { domanda: "Fiordaliso o Fiordipesco, chi è la promessa sposa di Febo?", rispostaCorretta: "Fiordaliso" },
+            { domanda: "Mahmood o Ghali, quale dei due manzi ha vinto Sanremo con Blanco?", rispostaCorretta: "Mahmood" },
+            { domanda: "Vanoni o Ferilli, chi è il nostro spirito guida di sempre?", rispostaCorretta: "Vanoni" },
+            { domanda: "Musical o Cinepanettone, “Mamma Mia” è un..?", rispostaCorretta: "Musical" }
         ];
 
+        let corrente = 0;
+        const totaleDomande = domande.length;
+        
         const sigla = document.getElementById("sigla");
         const musicaFinale = document.getElementById("musicaFinale");
-        const erroreAudio = document.getElementById("erroreAudio"); // Aggiunto per errore
+        const erroreAudio = document.getElementById("erroreAudio");
         const btnAudio = document.getElementById("avvia-audio");
 
         function avviaAudio() {
@@ -209,17 +212,12 @@
             });
         }
 
-        function forzaAudio() {
-            sigla.play().then(() => {
-                btnAudio.style.display = "none";
-            }).catch(err => console.error("Errore nell'avvio dell'audio:", err));
-        }
-
         window.onload = function() {
             avviaAudio();
             sigla.onended = function() {
                 musicaFinale.play();
                 creaGriglia();
+                mostraDomanda();
             };
         };
 
@@ -236,15 +234,20 @@
             evidenziaUltima();
         }
 
+        function mostraDomanda() {
+            const domandaElemento = document.getElementById("domanda");
+            domandaElemento.innerHTML = `<p><strong>Domanda ${corrente + 1}:</strong> ${domande[corrente].domanda}</p>`;
+        }
+
         function rispondi(esatta) {
             const box = document.querySelectorAll(".box");
-            const rispostaCorretta = domande[corrente].risposta;
 
-            if (esatta && rispostaCorretta === domande[corrente].risposta) {
+            if (esatta) {
                 if (corrente < totaleDomande) {
                     box[corrente].classList.add("corretto");
                     corrente++;
                     evidenziaUltima();
+                    mostraDomanda();
 
                     if (corrente === totaleDomande) {
                         mostraMessaggioFinale();
@@ -258,6 +261,7 @@
                     box[corrente].classList.remove("errato");
                     corrente = 0;
                     evidenziaUltima();
+                    mostraDomanda();
                 }, 1000);
             }
         }
@@ -289,7 +293,6 @@
             };
         }
 
-        creaGriglia();
     </script>
 
 </body>
