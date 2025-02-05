@@ -13,7 +13,7 @@
             margin: 0;
             padding: 20px;
         }
-        h1 {
+h1 {
             font-size: 40px;
             font-weight: bold;
             color: gold;
@@ -21,11 +21,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 20px;
+            gap: 30px; /* Aumentato per separare meglio il titolo e le immagini */
         }
         h1 img {
-            width: 40px; /* Imposta la dimensione dell'immagine */
-            height: 40px;
+            max-width: 50px; /* Limita la larghezza massima dell'immagine */
+            max-height: 50px; /* Limita l'altezza massima dell'immagine */
+            object-fit: contain; /* Mantiene il rapporto dell'immagine senza distorsioni */
         }
         #domanda {
             font-size: 24px;
@@ -106,7 +107,7 @@
 
     <h1>
         <img src="avanti.png" alt="Logo sinistro">
-        🎯 Gioco Finale - Avanti un Cazzo 🎯
+        Gioco Finale - Avanti un Cazzo
         <img src="avanti.png" alt="Logo destro">
     </h1>
     
