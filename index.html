@@ -132,10 +132,10 @@
             ["Musical o Cinepanettone, “Mamma Mia” è un...?", "Musical"]
         ];
 
-        function mostraDomanda() {
-            document.getElementById("domanda").innerHTML = 
-                `${domande[corrente][0]} <br> <strong>${domande[corrente][1]}</strong>`;
-        }
+function mostraDomanda() {
+    document.getElementById("domanda").innerHTML = 
+        `${domande[corrente][0]} <br> <strong style="color: red;">${domande[corrente][1]}</strong>`;
+}
 
         function creaGriglia() {
             const griglia = document.getElementById("griglia");
