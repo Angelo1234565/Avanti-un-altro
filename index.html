@@ -104,56 +104,192 @@
         #avvia-audio:hover {
             background-color: #e6b800;
         }
+
+        /* Stile messaggio finale */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        #messaggio-finale {
+            background: linear-gradient(45deg, #ffcc00, #ff9900);
+            color: black;
+            font-size: 28px;
+            font-weight: bold;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(255, 204, 0, 0.9);
+            animation: pop-up 0.5s ease-out;
+        }
+
+        @keyframes pop-up {
+            0% { transform: scale(0.7); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        #chiudi-messaggio {
+            display: block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: black;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        #chiudi-messaggio:hover {
+            background: red;
+        }
+
     </style>
 </head>
 <body>
 
     <h1>🎯 Gioco Finale - Avanti un Cazzo 🎯</h1>
 
-    <div id="griglia"></div>
+    <audio id="sigla" src="siglagioco.mp4"></audio>
+    <audio id="musicaFinale" src="musica_finale.mp3" loop></audio>
+    <audio id="erroreAudio" src="errore.mp4"></audio> <!-- Audio di errore -->
 
-    <div id="domande"></div>
+    <div id="griglia"></div>
 
     <button class="btn-corretta" onclick="rispondi(true)">✔ Corretta</button>
     <button class="btn-errata" onclick="rispondi(false)">✘ Errata</button>
     <button id="avvia-audio" onclick="forzaAudio()">🔊 Avvia Audio</button>
 
     <script>
+        let corrente = 0;
+        const totaleDomande = 22;
         const domande = [
-            { testo: "DELLE FEMMINE O DEGLI SCAPOLI, QUALE ISOLA ESISTE DAVVERO?", risposta: "**FEMMINE**" },
-            { testo: "GOED O WENT, QUAL È IL PAST SIMPLE DEL VERBO \"TO GO\"?", risposta: "**WENT**" },
-            { testo: "ASINELLO O CIUCHINO, CHI È L’AMICO DI SHREK?", risposta: "**CIUCHINO**" },
-            { testo: "HANKS O CRUISE, CHI INTERPRETA FORREST GUMP?", risposta: "**HANKS**" },
-            { testo: "PARI O DISPARI, I 7 NANI SONO?", risposta: "**DISPARI**" },
-            { testo: "STARK O EFFE, QUAL’È IL COGNOME DI IRONMAN?", risposta: "**STARK**" },
-            { testo: "EVANS O HEMSWORTH, QUALE CHRIS È CAPTAIN AMERICA?", risposta: "**EVANS**" },
-            { testo: "GATTO O TOPO, IN COSA SI TRASFORMA LA PROF. MCGRANITT?", risposta: "**GATTO**" },
-            { testo: "DI CAPRIO O DA VINCI, CHI HA DIPINTO LA GIOCONDA?", risposta: "**DA VINCI**" },
-            { testo: "FRECCE O LANCE, COSA USA KATNISS EVERDEEN?", risposta: "**FRECCE**" },
-            { testo: "FRAGOLE O BAMBOLINA, COME SI CHIAMA LA CANZONE DI ACHILLE LAURO?", risposta: "**FRAGOLE**" },
-            { testo: "FUORI O DENTRO, DOVE SI TROVA IL MARE DI NAPOLI NELLA FAMOSA FICTION?", risposta: "**FUORI**" },
-            { testo: "TERESA O CARMELA, CHI È L’AMANTE DI EDOARDO?", risposta: "**TERESA**" },
-            { testo: "OSSO O ORSO, COSA SIGNIFICA \"OSO\" IN SPAGNOLO?", risposta: "**ORSO**" },
-            { testo: "HOLLAND O HIDDLESTON, QUALE TOM È IL TUO AMICHEVOLE SPIDERMAN DI QUARTIERE?", risposta: "**HOLLAND**" },
-            { testo: "JACOB O CARLISLE, CHI HA L'IMPRINTING CON RENESMEE?", risposta: "**JACOB**" },
-            { testo: "2009 O 2010, IN CHE ANNO È NATO IL GRUPPO IL VOLO?", risposta: "**2009**" },
-            { testo: "MALGIOGLIO O ENZO MICCIO, CHI HA CONDOTTO \"MA COME TI VESTI\"?", risposta: "**ENZO MICCIO**" },
-            { testo: "FIORDALISO O FIORDIPESCO, CHI È LA PROMESSA SPOSA DI FEBO?", risposta: "**FIORDALISO**" },
-            { testo: "MAHMOOD O GHALI, QUALE DEI DUE MANZI HA VINTO SANREMO CON BLANCO?", risposta: "**MAHMOOD**" },
-            { testo: "VANONI O FERILLI, CHI È IL NOSTRO SPIRITO GUIDA DI SEMPRE?", risposta: "**VANONI**" },
-            { testo: "MUSICAL O CINEPANETTONE, \"MAMMA MIA\" È UN..?", risposta: "**MUSICAL**" }
+            { domanda: "Delle Femmine o degli Scapoli, quale isola esiste davvero?", risposta: "Femmine" },
+            { domanda: "Goed o Went, qual è il past simple del verbo “to go”?", risposta: "Went" },
+            { domanda: "Asinello o Ciuchino, chi è l’amico di Shrek?", risposta: "Ciuchino" },
+            { domanda: "Hanks o Cruise, chi interpreta Forrest gump?", risposta: "Hanks" },
+            { domanda: "Pari o Dispari, i 7 nani sono?", risposta: "Dispari" },
+            { domanda: "Stark o Effe, qual’è il cognome di Ironman?", risposta: "Stark" },
+            { domanda: "Evans o Hemsworth, quale Chris è Captain America?", risposta: "Evans" },
+            { domanda: "Gatto o Topo, in cosa si trasforma la prof. Mcgranitt?", risposta: "Gatto" },
+            { domanda: "Di Caprio o Da Vinci, chi ha dipinto la gioconda?", risposta: "Da Vinci" },
+            { domanda: "Frecce o Lance, cosa usa Katniss Everdeen?", risposta: "Frecce" },
+            { domanda: "Fragole o Bambolina, come si chiama la canzone di Achille Lauro?", risposta: "Fragole" },
+            { domanda: "Fuori o Dentro, dove si trova il mare di Napoli nella famosa fiction?", risposta: "Fuori" },
+            { domanda: "Teresa o Carmela, chi è l’amante di Edoardo?", risposta: "Teresa" },
+            { domanda: "Osso o Orso, cosa significa “Oso” in spagnolo?", risposta: "Orso" },
+            { domanda: "Holland o Hiddleston, quale Tom è il tuo amichevole Spiderman di quartiere?", risposta: "Holland" },
+            { domanda: "Jacob o Carlisle, chi ha l'imprinting con Renesmee?", risposta: "Jacob" },
+            { domanda: "2009 o 2010, in che anno è nato il gruppo il Volo?", risposta: "2009" },
+            { domanda: "Malgioglio o Enzo Miccio, chi ha condotto “Ma come ti vesti”?", risposta: "Enzo Miccio" },
+            { domanda: "Fiordaliso o Fiordipesco, chi è la promessa sposa di Febo?", risposta: "Fiordaliso" },
+            { domanda: "Mahmood o Ghali, quale dei due manzi ha vinto Sanremo con Blanco?", risposta: "Mahmood" },
+            { domanda: "Vanoni o Ferilli, chi è il nostro spirito guida di sempre?", risposta: "Vanoni" },
+            { domanda: "Musical o Cinepanettone, “Mamma Mia” è un..?", risposta: "Musical" }
         ];
 
-        function mostraDomande() {
-            const container = document.getElementById('domande');
-            domande.forEach((domanda, index) => {
-                const div = document.createElement('div');
-                div.innerHTML = `${index + 1}. ${domanda.testo}<br>${domanda.risposta}<br><br>`;
-                container.appendChild(div);
+        const sigla = document.getElementById("sigla");
+        const musicaFinale = document.getElementById("musicaFinale");
+        const erroreAudio = document.getElementById("erroreAudio"); // Aggiunto per errore
+        const btnAudio = document.getElementById("avvia-audio");
+
+        function avviaAudio() {
+            sigla.play().then(() => {
+                btnAudio.style.display = "none";
+            }).catch(() => {
+                btnAudio.style.display = "block";
             });
         }
 
-        mostraDomande();
+        function forzaAudio() {
+            sigla.play().then(() => {
+                btnAudio.style.display = "none";
+            }).catch(err => console.error("Errore nell'avvio dell'audio:", err));
+        }
+
+        window.onload = function() {
+            avviaAudio();
+            sigla.onended = function() {
+                musicaFinale.play();
+                creaGriglia();
+            };
+        };
+
+        function creaGriglia() {
+            const griglia = document.getElementById("griglia");
+            griglia.innerHTML = "";
+
+            for (let i = 0; i < totaleDomande; i++) {
+                const box = document.createElement("div");
+                box.classList.add("box");
+                box.innerText = i + 1;
+                griglia.appendChild(box);
+            }
+            evidenziaUltima();
+        }
+
+        function rispondi(esatta) {
+            const box = document.querySelectorAll(".box");
+            const rispostaCorretta = domande[corrente].risposta;
+
+            if (esatta && rispostaCorretta === domande[corrente].risposta) {
+                if (corrente < totaleDomande) {
+                    box[corrente].classList.add("corretto");
+                    corrente++;
+                    evidenziaUltima();
+
+                    if (corrente === totaleDomande) {
+                        mostraMessaggioFinale();
+                    }
+                }
+            } else {
+                erroreAudio.play(); // Riproduce l'audio di errore
+                box.forEach(b => b.classList.remove("corretto", "errato", "ultima-raggiunta"));
+                box[corrente].classList.add("errato");
+                setTimeout(() => {
+                    box[corrente].classList.remove("errato");
+                    corrente = 0;
+                    evidenziaUltima();
+                }, 1000);
+            }
+        }
+
+        function evidenziaUltima() {
+            const box = document.querySelectorAll(".box");
+            box.forEach(b => b.classList.remove("ultima-raggiunta"));
+
+            if (corrente < totaleDomande) {
+                box[corrente].classList.add("ultima-raggiunta");
+            }
+        }
+
+        function mostraMessaggioFinale() {
+            const messaggio = document.createElement("div");
+            messaggio.innerHTML = `
+                <div id="overlay">
+                    <div id="messaggio-finale">
+                        🎉 <b>HAI VINTO!</b> 🎉 <br>
+                        Sei un vero campione! 🏆 <br>
+                        <span id="chiudi-messaggio">Chiudi</span>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(messaggio);
+
+            document.getElementById("chiudi-messaggio").onclick = function() {
+                document.getElementById("overlay").remove();
+            };
+        }
+
+        creaGriglia();
     </script>
 
 </body>
