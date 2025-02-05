@@ -162,8 +162,6 @@
     <audio id="musicaFinale" src="musica_finale.mp3" loop></audio>
     <audio id="erroreAudio" src="errore.mp4"></audio> <!-- Audio di errore -->
 
-    <div id="domanda"></div> <!-- Qui verrà visualizzata la domanda -->
-
     <div id="griglia"></div>
 
     <button class="btn-corretta" onclick="rispondi(true)">✔ Corretta</button>
@@ -171,6 +169,9 @@
     <button id="avvia-audio" onclick="forzaAudio()">🔊 Avvia Audio</button>
 
     <script>
+        let corrente = 0;
+        const totaleDomande = 22;
+
         const domande = [
             { domanda: "Delle Femmine o degli Scapoli, quale isola esiste davvero?", rispostaCorretta: "Femmine" },
             { domanda: "Goed o Went, qual è il past simple del verbo “to go”?", rispostaCorretta: "Went" },
@@ -196,12 +197,9 @@
             { domanda: "Musical o Cinepanettone, “Mamma Mia” è un..?", rispostaCorretta: "Musical" }
         ];
 
-        let corrente = 0;
-        const totaleDomande = domande.length;
-        
         const sigla = document.getElementById("sigla");
         const musicaFinale = document.getElementById("musicaFinale");
-        const erroreAudio = document.getElementById("erroreAudio");
+        const erroreAudio = document.getElementById("erroreAudio"); // Aggiunto per errore
         const btnAudio = document.getElementById("avvia-audio");
 
         function avviaAudio() {
@@ -212,12 +210,17 @@
             });
         }
 
+        function forzaAudio() {
+            sigla.play().then(() => {
+                btnAudio.style.display = "none";
+            }).catch(err => console.error("Errore nell'avvio dell'audio:", err));
+        }
+
         window.onload = function() {
             avviaAudio();
             sigla.onended = function() {
                 musicaFinale.play();
                 creaGriglia();
-                mostraDomanda();
             };
         };
 
@@ -234,11 +237,6 @@
             evidenziaUltima();
         }
 
-        function mostraDomanda() {
-            const domandaElemento = document.getElementById("domanda");
-            domandaElemento.innerHTML = `<p><strong>Domanda ${corrente + 1}:</strong> ${domande[corrente].domanda}</p>`;
-        }
-
         function rispondi(esatta) {
             const box = document.querySelectorAll(".box");
 
@@ -247,7 +245,6 @@
                     box[corrente].classList.add("corretto");
                     corrente++;
                     evidenziaUltima();
-                    mostraDomanda();
 
                     if (corrente === totaleDomande) {
                         mostraMessaggioFinale();
@@ -261,7 +258,6 @@
                     box[corrente].classList.remove("errato");
                     corrente = 0;
                     evidenziaUltima();
-                    mostraDomanda();
                 }, 1000);
             }
         }
@@ -293,6 +289,7 @@
             };
         }
 
+        creaGriglia();
     </script>
 
 </body>
