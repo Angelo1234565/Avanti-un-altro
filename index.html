@@ -19,6 +19,15 @@
             color: gold;
             text-shadow: 2px 2px 5px rgba(255, 215, 0, 0.8);
         }
+        #domanda {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #222;
+            display: inline-block;
+            border-radius: 10px;
+        }
         #griglia {
             display: grid;
             grid-template-columns: repeat(11, 60px);
@@ -78,132 +87,60 @@
         .btn-corretta {
             background-color: #28a745;
             color: white;
-            box-shadow: 0 5px 10px rgba(40, 167, 69, 0.5);
-        }
-        .btn-corretta:hover {
-            background-color: #218838;
         }
         .btn-errata {
             background-color: #dc3545;
             color: white;
-            box-shadow: 0 5px 10px rgba(220, 53, 69, 0.5);
         }
-        .btn-errata:hover {
-            background-color: #c82333;
-        }
-        #avvia-audio {
-            font-size: 16px;
-            padding: 8px 16px;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #ffcc00;
-            color: black;
-            font-weight: bold;
-        }
-        #avvia-audio:hover {
-            background-color: #e6b800;
-        }
-
-        /* Stile messaggio finale */
-        #overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        #messaggio-finale {
-            background: linear-gradient(45deg, #ffcc00, #ff9900);
-            color: black;
-            font-size: 28px;
-            font-weight: bold;
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 0 20px rgba(255, 204, 0, 0.9);
-            animation: pop-up 0.5s ease-out;
-        }
-
-        @keyframes pop-up {
-            0% { transform: scale(0.7); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        #chiudi-messaggio {
-            display: block;
-            margin-top: 15px;
-            padding: 10px 20px;
-            background: black;
-            color: white;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background 0.3s;
-        }
-
-        #chiudi-messaggio:hover {
-            background: red;
-        }
-
     </style>
 </head>
 <body>
 
     <h1>🎯 Gioco Finale - Avanti un Cazzo 🎯</h1>
-
-    <audio id="sigla" src="siglagioco.mp4"></audio>
-    <audio id="musicaFinale" src="musica_finale.mp3" loop></audio>
-    <audio id="erroreAudio" src="errore.mp4"></audio> <!-- Audio di errore -->
+    
+    <div id="domanda"></div>
 
     <div id="griglia"></div>
 
     <button class="btn-corretta" onclick="rispondi(true)">✔ Corretta</button>
     <button class="btn-errata" onclick="rispondi(false)">✘ Errata</button>
-    <button id="avvia-audio" onclick="forzaAudio()">🔊 Avvia Audio</button>
 
     <script>
         let corrente = 0;
-        const totaleDomande = 22;
+        const domande = [
+            ["Delle Femmine o degli Scapoli, quale isola esiste davvero?", "Femmine"],
+            ["Goed o Went, qual è il past simple del verbo “to go”?", "Went"],
+            ["Asinello o Ciuchino, chi è l’amico di Shrek?", "Ciuchino"],
+            ["Hanks o Cruise, chi interpreta Forrest Gump?", "Hanks"],
+            ["Pari o Dispari, i 7 nani sono?", "Dispari"],
+            ["Stark o Effe, qual è il cognome di Ironman?", "Stark"],
+            ["Evans o Hemsworth, quale Chris è Captain America?", "Evans"],
+            ["Gatto o Topo, in cosa si trasforma la prof. Mcgranitt?", "Gatto"],
+            ["Di Caprio o Da Vinci, chi ha dipinto la Gioconda?", "Da Vinci"],
+            ["Frecce o Lance, cosa usa Katniss Everdeen?", "Frecce"],
+            ["Fragole o Bambolina, come si chiama la canzone di Achille Lauro?", "Fragole"],
+            ["Fuori o Dentro, dove si trova il mare di Napoli nella famosa fiction?", "Fuori"],
+            ["Teresa o Carmela, chi è l’amante di Edoardo?", "Teresa"],
+            ["Osso o Orso, cosa significa “Oso” in spagnolo?", "Orso"],
+            ["Holland o Hiddleston, quale Tom è il tuo amichevole Spiderman di quartiere?", "Holland"],
+            ["Jacob o Carlisle, chi ha l'imprinting con Renesmee?", "Jacob"],
+            ["2009 o 2010, in che anno è nato il gruppo Il Volo?", "2009"],
+            ["Malgioglio o Enzo Miccio, chi ha condotto “Ma come ti vesti”?", "Enzo Miccio"],
+            ["Fiordaliso o Fiordipesco, chi è la promessa sposa di Febo?", "Fiordaliso"],
+            ["Mahmood o Ghali, quale dei due ha vinto Sanremo con Blanco?", "Mahmood"],
+            ["Vanoni o Ferilli, chi è il nostro spirito guida di sempre?", "Vanoni"],
+            ["Musical o Cinepanettone, “Mamma Mia” è un...?", "Musical"]
+        ];
 
-        const sigla = document.getElementById("sigla");
-        const musicaFinale = document.getElementById("musicaFinale");
-        const erroreAudio = document.getElementById("erroreAudio"); // Aggiunto per errore
-        const btnAudio = document.getElementById("avvia-audio");
-
-        function avviaAudio() {
-            sigla.play().then(() => {
-                btnAudio.style.display = "none";
-            }).catch(() => {
-                btnAudio.style.display = "block";
-            });
+        function mostraDomanda() {
+            document.getElementById("domanda").innerHTML = 
+                `${domande[corrente][0]} <br> <strong>${domande[corrente][1]}</strong>`;
         }
-
-        function forzaAudio() {
-            sigla.play().then(() => {
-                btnAudio.style.display = "none";
-            }).catch(err => console.error("Errore nell'avvio dell'audio:", err));
-        }
-
-        window.onload = function() {
-            avviaAudio();
-            sigla.onended = function() {
-                musicaFinale.play();
-                creaGriglia();
-            };
-        };
 
         function creaGriglia() {
             const griglia = document.getElementById("griglia");
             griglia.innerHTML = "";
-
-            for (let i = 0; i < totaleDomande; i++) {
+            for (let i = 0; i < domande.length; i++) {
                 const box = document.createElement("div");
                 box.classList.add("box");
                 box.innerText = i + 1;
@@ -216,55 +153,34 @@
             const box = document.querySelectorAll(".box");
 
             if (esatta) {
-                if (corrente < totaleDomande) {
+                if (corrente < domande.length) {
                     box[corrente].classList.add("corretto");
                     corrente++;
-                    evidenziaUltima();
-
-                    if (corrente === totaleDomande) {
-                        mostraMessaggioFinale();
+                    if (corrente < domande.length) {
+                        mostraDomanda();
+                        evidenziaUltima();
+                    } else {
+                        alert("🎉 HAI VINTO! 🎉");
                     }
                 }
             } else {
-                erroreAudio.play(); // Riproduce l'audio di errore
-                box.forEach(b => b.classList.remove("corretto", "errato", "ultima-raggiunta"));
-                box[corrente].classList.add("errato");
-                setTimeout(() => {
-                    box[corrente].classList.remove("errato");
-                    corrente = 0;
-                    evidenziaUltima();
-                }, 1000);
+                box.forEach(b => b.classList.remove("corretto", "ultima-raggiunta"));
+                corrente = 0;
+                mostraDomanda();
+                evidenziaUltima();
             }
         }
 
         function evidenziaUltima() {
             const box = document.querySelectorAll(".box");
             box.forEach(b => b.classList.remove("ultima-raggiunta"));
-
-            if (corrente < totaleDomande) {
+            if (corrente < domande.length) {
                 box[corrente].classList.add("ultima-raggiunta");
             }
         }
 
-        function mostraMessaggioFinale() {
-            const messaggio = document.createElement("div");
-            messaggio.innerHTML = `
-                <div id="overlay">
-                    <div id="messaggio-finale">
-                        🎉 <b>HAI VINTO!</b> 🎉 <br>
-                        Sei un vero campione! 🏆 <br>
-                        <span id="chiudi-messaggio">Chiudi</span>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(messaggio);
-
-            document.getElementById("chiudi-messaggio").onclick = function() {
-                document.getElementById("overlay").remove();
-            };
-        }
-
         creaGriglia();
+        mostraDomanda();
     </script>
 
 </body>
