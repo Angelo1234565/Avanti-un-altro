@@ -13,7 +13,7 @@
             margin: 0;
             padding: 20px;
         }
-h1 {
+        h1 {
             font-size: 40px;
             font-weight: bold;
             color: gold;
@@ -101,6 +101,18 @@ h1 {
             background-color: #dc3545;
             color: white;
         }
+        /* Pulsante audio in alto a destra */
+        .btn-audio {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #f39c12;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -110,13 +122,20 @@ h1 {
         Gioco Finale - Avanti un Cazzo
         <img src="avanti.png" alt="Logo destro">
     </h1>
-    
+
+    <!-- Pulsante per avviare la musica -->
+    <button class="btn-audio" onclick="playAudio()">🎵 Avvia Musica</button>
+
     <div id="domanda"></div>
 
     <div id="griglia"></div>
 
     <button class="btn-corretta" onclick="rispondi(true)">✔ Corretta</button>
     <button class="btn-errata" onclick="rispondi(false)">✘ Errata</button>
+
+    <!-- Audio -->
+    <audio id="musica" src="siglagioco.mp4"></audio>
+    <audio id="errore" src="errore.mp4"></audio>
 
     <script>
         let corrente = 0;
@@ -181,6 +200,10 @@ h1 {
                 corrente = 0;
                 mostraDomanda();
                 evidenziaUltima();
+
+                // Riproduci audio errore
+                const erroreAudio = document.getElementById("errore");
+                erroreAudio.play();
             }
         }
 
@@ -190,6 +213,12 @@ h1 {
             if (corrente < domande.length) {
                 box[corrente].classList.add("ultima-raggiunta");
             }
+        }
+
+        // Funzione per avviare la musica
+        function playAudio() {
+            const audio = document.getElementById("musica");
+            audio.play();
         }
 
         creaGriglia();
