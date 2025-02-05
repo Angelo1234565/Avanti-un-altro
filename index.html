@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIOCO FINALE - AVANTI UN CAZZO</title>
+    <title>Gioco Finale - Avanti un Cazzo</title>
     <style>
         body {
             text-align: center;
@@ -12,20 +12,12 @@
             color: white;
             margin: 0;
             padding: 20px;
-            text-transform: uppercase;
         }
         h1 {
             font-size: 40px;
             font-weight: bold;
             color: gold;
             text-shadow: 2px 2px 5px rgba(255, 215, 0, 0.8);
-        }
-        #domanda {
-            margin: 20px auto;
-            font-size: 24px;
-            font-weight: bold;
-            max-width: 80%;
-            line-height: 1.5;
         }
         #griglia {
             display: grid;
@@ -66,6 +58,11 @@
         .ultima-raggiunta {
             border: 4px solid gold;
             box-shadow: 0 0 20px gold;
+            animation: pulsazione 1s infinite alternate;
+        }
+        @keyframes pulsazione {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
         }
         button {
             margin: 10px;
@@ -76,10 +73,12 @@
             border: none;
             border-radius: 8px;
             transition: 0.3s;
+            text-transform: uppercase;
         }
         .btn-corretta {
             background-color: #28a745;
             color: white;
+            box-shadow: 0 5px 10px rgba(40, 167, 69, 0.5);
         }
         .btn-corretta:hover {
             background-color: #218838;
@@ -87,69 +86,75 @@
         .btn-errata {
             background-color: #dc3545;
             color: white;
+            box-shadow: 0 5px 10px rgba(220, 53, 69, 0.5);
         }
         .btn-errata:hover {
             background-color: #c82333;
         }
+        #avvia-audio {
+            font-size: 16px;
+            padding: 8px 16px;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ffcc00;
+            color: black;
+            font-weight: bold;
+        }
+        #avvia-audio:hover {
+            background-color: #e6b800;
+        }
     </style>
 </head>
 <body>
-    <h1>🎯 GIOCO FINALE - AVANTI UN CAZZO 🎯</h1>
-    <div id="domanda"></div>
+
+    <h1>🎯 Gioco Finale - Avanti un Cazzo 🎯</h1>
+
     <div id="griglia"></div>
-    <button class="btn-corretta" onclick="rispondi(true)">✔ CORRETTA</button>
-    <button class="btn-errata" onclick="rispondi(false)">✘ ERRATA</button>
+
+    <div id="domande"></div>
+
+    <button class="btn-corretta" onclick="rispondi(true)">✔ Corretta</button>
+    <button class="btn-errata" onclick="rispondi(false)">✘ Errata</button>
+    <button id="avvia-audio" onclick="forzaAudio()">🔊 Avvia Audio</button>
 
     <script>
         const domande = [
-            { domanda: "DELLE FEMMINE O DEGLI SCAPOLI, QUALE ISOLA ESISTE DAVVERO?", risposta: "FEMMINE" },
-            { domanda: "GOED O WENT, QUAL È IL PAST SIMPLE DEL VERBO 'TO GO'?", risposta: "WENT" },
-            { domanda: "ASINELLO O CIUCHINO, CHI È L'AMICO DI SHREK?", risposta: "CIUCHINO" },
-            { domanda: "HANKS O CRUISE, CHI INTERPRETA FORREST GUMP?", risposta: "HANKS" },
-            { domanda: "PARI O DISPARI, I 7 NANI SONO?", risposta: "DISPARI" },
-            { domanda: "STARK O EFFE, QUAL È IL COGNOME DI IRONMAN?", risposta: "STARK" },
-            { domanda: "EVANS O HEMSWORTH, QUALE CHRIS È CAPTAIN AMERICA?", risposta: "EVANS" },
-            { domanda: "GATTO O TOPO, IN COSA SI TRASFORMA LA PROF. MCGRANITT?", risposta: "GATTO" },
-            { domanda: "DI CAPRIO O DA VINCI, CHI HA DIPINTO LA GIOCONDA?", risposta: "DA VINCI" },
-            { domanda: "FRECCE O LANCE, COSA USA KATNISS EVERDEEN?", risposta: "FRECCE" },
-            { domanda: "FRAGOLE O BAMBOLINA, COME SI CHIAMA LA CANZONE DI ACHILLE LAURO?", risposta: "FRAGOLE" },
-            { domanda: "FUORI O DENTRO, DOVE SI TROVA IL MARE DI NAPOLI NELLA FAMOSA FICTION?", risposta: "FUORI" },
-            { domanda: "TERESA O CARMELA, CHI È L'AMANTE DI EDOARDO?", risposta: "TERESA" },
-            { domanda: "OSSO O ORSO, COSA SIGNIFICA 'OSO' IN SPAGNOLO?", risposta: "ORSO" },
-            { domanda: "HOLLAND O HIDDLESTON, QUALE TOM È SPIDERMAN?", risposta: "HOLLAND" },
-            { domanda: "JACOB O CARLISLE, CHI HA L'IMPRINTING CON RENESMEE?", risposta: "JACOB" },
-            { domanda: "2009 O 2010, IN CHE ANNO È NATO IL GRUPPO IL VOLO?", risposta: "2009" },
-            { domanda: "MALGIOGLIO O ENZO MICCIO, CHI HA CONDOTTO 'MA COME TI VESTI'?", risposta: "ENZO MICCIO" },
-            { domanda: "FIORDALISO O FIORDIPESCO, CHI È LA PROMESSA SPOSA DI FEBO?", risposta: "FIORDALISO" },
-            { domanda: "MAHMOOD O GHALI, CHI HA VINTO SANREMO CON BLANCO?", risposta: "MAHMOOD" },
-            { domanda: "VANONI O FERILLI, CHI È IL NOSTRO SPIRITO GUIDA?", risposta: "VANONI" },
-            { domanda: "MUSICAL O CINEPANETTONE, 'MAMMA MIA' È UN..?", risposta: "MUSICAL" }
+            { testo: "DELLE FEMMINE O DEGLI SCAPOLI, QUALE ISOLA ESISTE DAVVERO?", risposta: "**FEMMINE**" },
+            { testo: "GOED O WENT, QUAL È IL PAST SIMPLE DEL VERBO \"TO GO\"?", risposta: "**WENT**" },
+            { testo: "ASINELLO O CIUCHINO, CHI È L’AMICO DI SHREK?", risposta: "**CIUCHINO**" },
+            { testo: "HANKS O CRUISE, CHI INTERPRETA FORREST GUMP?", risposta: "**HANKS**" },
+            { testo: "PARI O DISPARI, I 7 NANI SONO?", risposta: "**DISPARI**" },
+            { testo: "STARK O EFFE, QUAL’È IL COGNOME DI IRONMAN?", risposta: "**STARK**" },
+            { testo: "EVANS O HEMSWORTH, QUALE CHRIS È CAPTAIN AMERICA?", risposta: "**EVANS**" },
+            { testo: "GATTO O TOPO, IN COSA SI TRASFORMA LA PROF. MCGRANITT?", risposta: "**GATTO**" },
+            { testo: "DI CAPRIO O DA VINCI, CHI HA DIPINTO LA GIOCONDA?", risposta: "**DA VINCI**" },
+            { testo: "FRECCE O LANCE, COSA USA KATNISS EVERDEEN?", risposta: "**FRECCE**" },
+            { testo: "FRAGOLE O BAMBOLINA, COME SI CHIAMA LA CANZONE DI ACHILLE LAURO?", risposta: "**FRAGOLE**" },
+            { testo: "FUORI O DENTRO, DOVE SI TROVA IL MARE DI NAPOLI NELLA FAMOSA FICTION?", risposta: "**FUORI**" },
+            { testo: "TERESA O CARMELA, CHI È L’AMANTE DI EDOARDO?", risposta: "**TERESA**" },
+            { testo: "OSSO O ORSO, COSA SIGNIFICA \"OSO\" IN SPAGNOLO?", risposta: "**ORSO**" },
+            { testo: "HOLLAND O HIDDLESTON, QUALE TOM È IL TUO AMICHEVOLE SPIDERMAN DI QUARTIERE?", risposta: "**HOLLAND**" },
+            { testo: "JACOB O CARLISLE, CHI HA L'IMPRINTING CON RENESMEE?", risposta: "**JACOB**" },
+            { testo: "2009 O 2010, IN CHE ANNO È NATO IL GRUPPO IL VOLO?", risposta: "**2009**" },
+            { testo: "MALGIOGLIO O ENZO MICCIO, CHI HA CONDOTTO \"MA COME TI VESTI\"?", risposta: "**ENZO MICCIO**" },
+            { testo: "FIORDALISO O FIORDIPESCO, CHI È LA PROMESSA SPOSA DI FEBO?", risposta: "**FIORDALISO**" },
+            { testo: "MAHMOOD O GHALI, QUALE DEI DUE MANZI HA VINTO SANREMO CON BLANCO?", risposta: "**MAHMOOD**" },
+            { testo: "VANONI O FERILLI, CHI È IL NOSTRO SPIRITO GUIDA DI SEMPRE?", risposta: "**VANONI**" },
+            { testo: "MUSICAL O CINEPANETTONE, \"MAMMA MIA\" È UN..?", risposta: "**MUSICAL**" }
         ];
 
-        let corrente = 0;
-
-        function mostraDomanda() {
-            const domandaEl = document.getElementById("domanda");
-            const domandaCorrente = domande[corrente];
-            domandaEl.innerHTML = `${domandaCorrente.domanda}<br><strong>${domandaCorrente.risposta}</strong>`;
+        function mostraDomande() {
+            const container = document.getElementById('domande');
+            domande.forEach((domanda, index) => {
+                const div = document.createElement('div');
+                div.innerHTML = `${index + 1}. ${domanda.testo}<br>${domanda.risposta}<br><br>`;
+                container.appendChild(div);
+            });
         }
 
-        function rispondi(esatta) {
-            if (esatta) {
-                corrente++;
-                if (corrente < domande.length) {
-                    mostraDomanda();
-                } else {
-                    corrente = 0;
-                    mostraDomanda();
-                }
-            } else {
-                corrente = 0;
-                mostraDomanda();
-            }
-        }
-
-        window.onload = mostraDomanda;
+        mostraDomande();
     </script>
+
 </body>
 </html>
