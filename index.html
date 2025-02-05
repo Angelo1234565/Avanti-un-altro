@@ -101,17 +101,21 @@
             background-color: #dc3545;
             color: white;
         }
-        /* Pulsante audio in alto a destra */
+        /* Pulsante audio tra corretta e errata */
         .btn-audio {
-            position: absolute;
-            top: 20px;
-            right: 20px;
             padding: 10px 20px;
             font-size: 18px;
             background-color: #f39c12;
             color: white;
             border-radius: 5px;
             cursor: pointer;
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
         }
     </style>
 </head>
@@ -123,15 +127,17 @@
         <img src="avanti.png" alt="Logo destro">
     </h1>
 
-    <!-- Pulsante per avviare la musica -->
-    <button class="btn-audio" onclick="playAudio()">🎵 Avvia Musica</button>
-
     <div id="domanda"></div>
 
     <div id="griglia"></div>
 
-    <button class="btn-corretta" onclick="rispondi(true)">✔ Corretta</button>
-    <button class="btn-errata" onclick="rispondi(false)">✘ Errata</button>
+    <!-- Contenitore per i pulsanti centrati -->
+    <div class="buttons-container">
+        <button class="btn-corretta" onclick="rispondi(true)">✔ Corretta</button>
+        <!-- Pulsante per avviare la musica al centro -->
+        <button class="btn-audio" onclick="playAudio()">🎵 Avvia Musica</button>
+        <button class="btn-errata" onclick="rispondi(false)">✘ Errata</button>
+    </div>
 
     <!-- Audio -->
     <audio id="musica" src="siglagioco.mp4"></audio>
