@@ -19,6 +19,10 @@
             color: gold;
             text-shadow: 2px 2px 5px rgba(255, 215, 0, 0.8);
         }
+        #domanda {
+            font-size: 28px;
+            margin: 20px 0;
+        }
         #griglia {
             display: grid;
             grid-template-columns: repeat(11, 60px);
@@ -40,6 +44,14 @@
             border-radius: 10px;
             transition: all 0.3s ease-in-out;
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+        .box.ultima-raggiunta::after {
+            content: "⭐";
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 20px;
         }
         .corretto {
             background-color: #4caf50;
@@ -55,15 +67,6 @@
             color: white;
             box-shadow: 0 0 15px rgba(244, 67, 54, 0.8);
         }
-        .ultima-raggiunta {
-            border: 4px solid gold;
-            box-shadow: 0 0 20px gold;
-            animation: pulsazione 1s infinite alternate;
-        }
-        @keyframes pulsazione {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.1); }
-        }
         button {
             margin: 10px;
             padding: 15px 40px;
@@ -78,160 +81,72 @@
         .btn-corretta {
             background-color: #28a745;
             color: white;
-            box-shadow: 0 5px 10px rgba(40, 167, 69, 0.5);
-        }
-        .btn-corretta:hover {
-            background-color: #218838;
         }
         .btn-errata {
             background-color: #dc3545;
             color: white;
-            box-shadow: 0 5px 10px rgba(220, 53, 69, 0.5);
         }
-        .btn-errata:hover {
-            background-color: #c82333;
-        }
-        #avvia-audio {
-            font-size: 16px;
-            padding: 8px 16px;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #ffcc00;
-            color: black;
-            font-weight: bold;
-        }
-        #avvia-audio:hover {
-            background-color: #e6b800;
-        }
-
-        /* Stile messaggio finale */
-        #overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        #messaggio-finale {
-            background: linear-gradient(45deg, #ffcc00, #ff9900);
-            color: black;
-            font-size: 28px;
-            font-weight: bold;
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 0 20px rgba(255, 204, 0, 0.9);
-            animation: pop-up 0.5s ease-out;
-        }
-
-        @keyframes pop-up {
-            0% { transform: scale(0.7); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        #chiudi-messaggio {
-            display: block;
-            margin-top: 15px;
-            padding: 10px 20px;
-            background: black;
-            color: white;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background 0.3s;
-        }
-
-        #chiudi-messaggio:hover {
-            background: red;
-        }
-
     </style>
 </head>
 <body>
 
     <h1>🎯 Gioco Finale - Avanti un Cazzo 🎯</h1>
-
-    <audio id="sigla" src="siglagioco.mp4"></audio>
-    <audio id="musicaFinale" src="musica_finale.mp3" loop></audio>
-    <audio id="erroreAudio" src="errore.mp4"></audio> <!-- Audio di errore -->
-
+    <div id="domanda"></div>
     <div id="griglia"></div>
 
     <button class="btn-corretta" onclick="rispondi(true)">✔ Corretta</button>
     <button class="btn-errata" onclick="rispondi(false)">✘ Errata</button>
-    <button id="avvia-audio" onclick="forzaAudio()">🔊 Avvia Audio</button>
 
     <script>
+        const domande = [
+            "Delle Femmine o degli Scapoli, quale isola esiste davvero? <b>Femmine</b>",
+            "Goed o Went, qual è il past simple del verbo 'to go'? <b>Went</b>",
+            "Asinello o Ciuchino, chi è l’amico di Shrek? <b>Ciuchino</b>",
+            "Hanks o Cruise, chi interpreta Forrest Gump? <b>Hanks</b>",
+            "Pari o Dispari, i 7 nani sono? <b>Dispari</b>",
+            "Stark o Effe, qual è il cognome di Ironman? <b>Stark</b>",
+            "Evans o Hemsworth, quale Chris è Captain America? <b>Evans</b>",
+            "Gatto o Topo, in cosa si trasforma la prof. McGranitt? <b>Gatto</b>",
+            "Di Caprio o Da Vinci, chi ha dipinto la Gioconda? <b>Da Vinci</b>",
+            "Frecce o Lance, cosa usa Katniss Everdeen? <b>Frecce</b>",
+            "Fragole o Bambolina, come si chiama la canzone di Achille Lauro? <b>Fragole</b>",
+            "Fuori o Dentro, dove si trova il mare di Napoli nella famosa fiction? <b>Fuori</b>",
+            "Teresa o Carmela, chi è l’amante di Edoardo? <b>Teresa</b>",
+            "Osso o Orso, cosa significa 'Oso' in spagnolo? <b>Orso</b>",
+            "Holland o Hiddleston, quale Tom è il tuo amichevole Spiderman di quartiere? <b>Holland</b>",
+            "Jacob o Carlisle, chi ha l'imprinting con Renesmee? <b>Jacob</b>",
+            "2009 o 2010, in che anno è nato il gruppo Il Volo? <b>2009</b>",
+            "Malgioglio o Enzo Miccio, chi ha condotto 'Ma come ti vesti'? <b>Enzo Miccio</b>",
+            "Fiordaliso o Fiordipesco, chi è la promessa sposa di Febo? <b>Fiordaliso</b>",
+            "Mahmood o Ghali, quale dei due ha vinto Sanremo con Blanco? <b>Mahmood</b>",
+            "Vanoni o Ferilli, chi è il nostro spirito guida di sempre? <b>Vanoni</b>",
+            "Musical o Cinepanettone, 'Mamma Mia' è un..? <b>Musical</b>"
+        ];
+
         let corrente = 0;
-        const totaleDomande = 22;
 
-        const sigla = document.getElementById("sigla");
-        const musicaFinale = document.getElementById("musicaFinale");
-        const erroreAudio = document.getElementById("erroreAudio"); // Aggiunto per errore
-        const btnAudio = document.getElementById("avvia-audio");
-
-        function avviaAudio() {
-            sigla.play().then(() => {
-                btnAudio.style.display = "none";
-            }).catch(() => {
-                btnAudio.style.display = "block";
-            });
+        function mostraDomanda() {
+            document.getElementById("domanda").innerHTML = domande[corrente];
         }
 
-        function forzaAudio() {
-            sigla.play().then(() => {
-                btnAudio.style.display = "none";
-            }).catch(err => console.error("Errore nell'avvio dell'audio:", err));
-        }
-
-        window.onload = function() {
-            avviaAudio();
-            sigla.onended = function() {
-                musicaFinale.play();
-                creaGriglia();
-            };
-        };
-
-        function creaGriglia() {
-            const griglia = document.getElementById("griglia");
-            griglia.innerHTML = "";
-
-            for (let i = 0; i < totaleDomande; i++) {
-                const box = document.createElement("div");
-                box.classList.add("box");
-                box.innerText = i + 1;
-                griglia.appendChild(box);
-            }
-            evidenziaUltima();
-        }
-
-        function rispondi(esatta) {
+        function rispondi(corretta) {
             const box = document.querySelectorAll(".box");
 
-            if (esatta) {
-                if (corrente < totaleDomande) {
-                    box[corrente].classList.add("corretto");
-                    corrente++;
+            if (corretta) {
+                box[corrente].classList.add("corretto");
+                corrente++;
+                if (corrente < domande.length) {
+                    mostraDomanda();
                     evidenziaUltima();
-
-                    if (corrente === totaleDomande) {
-                        mostraMessaggioFinale();
-                    }
+                } else {
+                    alert("🎉 Hai completato il gioco! 🎉");
                 }
             } else {
-                erroreAudio.play(); // Riproduce l'audio di errore
-                box.forEach(b => b.classList.remove("corretto", "errato", "ultima-raggiunta"));
                 box[corrente].classList.add("errato");
                 setTimeout(() => {
-                    box[corrente].classList.remove("errato");
+                    box.forEach(b => b.classList.remove("corretto", "errato", "ultima-raggiunta"));
                     corrente = 0;
+                    mostraDomanda();
                     evidenziaUltima();
                 }, 1000);
             }
@@ -240,31 +155,26 @@
         function evidenziaUltima() {
             const box = document.querySelectorAll(".box");
             box.forEach(b => b.classList.remove("ultima-raggiunta"));
-
-            if (corrente < totaleDomande) {
+            if (corrente < box.length) {
                 box[corrente].classList.add("ultima-raggiunta");
             }
         }
 
-        function mostraMessaggioFinale() {
-            const messaggio = document.createElement("div");
-            messaggio.innerHTML = `
-                <div id="overlay">
-                    <div id="messaggio-finale">
-                        🎉 <b>HAI VINTO!</b> 🎉 <br>
-                        Sei un vero campione! 🏆 <br>
-                        <span id="chiudi-messaggio">Chiudi</span>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(messaggio);
+        function creaGriglia() {
+            const griglia = document.getElementById("griglia");
+            griglia.innerHTML = "";
 
-            document.getElementById("chiudi-messaggio").onclick = function() {
-                document.getElementById("overlay").remove();
-            };
+            for (let i = 0; i < domande.length; i++) {
+                const box = document.createElement("div");
+                box.classList.add("box");
+                box.innerText = i + 1;
+                griglia.appendChild(box);
+            }
+            evidenziaUltima();
         }
 
         creaGriglia();
+        mostraDomanda();
     </script>
 
 </body>
