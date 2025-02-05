@@ -40,6 +40,7 @@
             border-radius: 10px;
             transition: all 0.3s ease-in-out;
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            position: relative;
         }
         .corretto {
             background-color: #4caf50;
@@ -231,66 +232,52 @@
             for (let i = 0; i < totaleDomande; i++) {
                 const box = document.createElement("div");
                 box.classList.add("box");
-                box.innerText = i + 1;
+                box.innerHTML = `${i + 1}<br><span class="domanda">${domande[i].domanda}</span>`;
                 griglia.appendChild(box);
             }
             evidenziaUltima();
         }
 
-        function rispondi(esatta) {
-            const box = document.querySelectorAll(".box");
-
-            if (esatta) {
-                if (corrente < totaleDomande) {
-                    box[corrente].classList.add("corretto");
-                    corrente++;
-                    evidenziaUltima();
-
-                    if (corrente === totaleDomande) {
-                        mostraMessaggioFinale();
-                    }
-                }
-            } else {
-                erroreAudio.play(); // Riproduce l'audio di errore
-                box.forEach(b => b.classList.remove("corretto", "errato", "ultima-raggiunta"));
-                box[corrente].classList.add("errato");
-                setTimeout(() => {
-                    box[corrente].classList.remove("errato");
-                    corrente = 0;
-                    evidenziaUltima();
-                }, 1000);
-            }
+        function evidenziaUltima() {
+            const griglia = document.getElementById("griglia");
+            const boxes = griglia.querySelectorAll(".box");
+            boxes[corrente].classList.add("ultima-raggiunta");
         }
 
-        function evidenziaUltima() {
-            const box = document.querySelectorAll(".box");
-            box.forEach(b => b.classList.remove("ultima-raggiunta"));
+        function rispondi(corretta) {
+            const griglia = document.getElementById("griglia");
+            const boxes = griglia.querySelectorAll(".box");
+            const risposta = domande[corrente].rispostaCorretta;
 
             if (corrente < totaleDomande) {
-                box[corrente].classList.add("ultima-raggiunta");
+                if (corrente < totaleDomande - 1) {
+                    boxes[corrente].classList.add(corretta ? "corretto" : "errato");
+                    if (corrente < totaleDomande - 1) {
+                        corrente++;
+                        evidenziaUltima();
+                    }
+                } else {
+                    finito();
+                }
             }
         }
 
-        function mostraMessaggioFinale() {
-            const messaggio = document.createElement("div");
-            messaggio.innerHTML = `
-                <div id="overlay">
-                    <div id="messaggio-finale">
-                        🎉 <b>HAI VINTO!</b> 🎉 <br>
-                        Sei un vero campione! 🏆 <br>
-                        <span id="chiudi-messaggio">Chiudi</span>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(messaggio);
-
-            document.getElementById("chiudi-messaggio").onclick = function() {
-                document.getElementById("overlay").remove();
-            };
+        function finito() {
+            musicaFinale.pause();
+            document.getElementById("overlay").style.display = "flex";
         }
 
-        creaGriglia();
+        function chiudiMessaggio() {
+            document.getElementById("overlay").style.display = "none";
+        }
     </script>
+
+    <div id="overlay" style="display: none;">
+        <div id="messaggio-finale">
+            <p>Hai completato il gioco!</p>
+            <button id="chiudi-messaggio" onclick="chiudiMessaggio()">Chiudi</button>
+        </div>
+    </div>
 
 </body>
 </html>
