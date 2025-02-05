@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gioco Finale - Avanti un Cazzo</title>
+    <title>GIOCO FINALE - AVANTI UN CAZZO</title>
     <style>
         body {
             text-align: center;
@@ -12,6 +12,7 @@
             color: white;
             margin: 0;
             padding: 20px;
+            text-transform: uppercase;
         }
         h1 {
             font-size: 40px;
@@ -20,8 +21,11 @@
             text-shadow: 2px 2px 5px rgba(255, 215, 0, 0.8);
         }
         #domanda {
-            font-size: 28px;
-            margin: 20px 0;
+            margin: 20px auto;
+            font-size: 24px;
+            font-weight: bold;
+            max-width: 80%;
+            line-height: 1.5;
         }
         #griglia {
             display: grid;
@@ -44,14 +48,6 @@
             border-radius: 10px;
             transition: all 0.3s ease-in-out;
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-            position: relative;
-        }
-        .box.ultima-raggiunta::after {
-            content: "⭐";
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            font-size: 20px;
         }
         .corretto {
             background-color: #4caf50;
@@ -67,6 +63,10 @@
             color: white;
             box-shadow: 0 0 15px rgba(244, 67, 54, 0.8);
         }
+        .ultima-raggiunta {
+            border: 4px solid gold;
+            box-shadow: 0 0 20px gold;
+        }
         button {
             margin: 10px;
             padding: 15px 40px;
@@ -76,106 +76,80 @@
             border: none;
             border-radius: 8px;
             transition: 0.3s;
-            text-transform: uppercase;
         }
         .btn-corretta {
             background-color: #28a745;
             color: white;
         }
+        .btn-corretta:hover {
+            background-color: #218838;
+        }
         .btn-errata {
             background-color: #dc3545;
             color: white;
         }
+        .btn-errata:hover {
+            background-color: #c82333;
+        }
     </style>
 </head>
 <body>
-
-    <h1>🎯 Gioco Finale - Avanti un Cazzo 🎯</h1>
+    <h1>🎯 GIOCO FINALE - AVANTI UN CAZZO 🎯</h1>
     <div id="domanda"></div>
     <div id="griglia"></div>
-
-    <button class="btn-corretta" onclick="rispondi(true)">✔ Corretta</button>
-    <button class="btn-errata" onclick="rispondi(false)">✘ Errata</button>
+    <button class="btn-corretta" onclick="rispondi(true)">✔ CORRETTA</button>
+    <button class="btn-errata" onclick="rispondi(false)">✘ ERRATA</button>
 
     <script>
         const domande = [
-            "Delle Femmine o degli Scapoli, quale isola esiste davvero? <b>Femmine</b>",
-            "Goed o Went, qual è il past simple del verbo 'to go'? <b>Went</b>",
-            "Asinello o Ciuchino, chi è l’amico di Shrek? <b>Ciuchino</b>",
-            "Hanks o Cruise, chi interpreta Forrest Gump? <b>Hanks</b>",
-            "Pari o Dispari, i 7 nani sono? <b>Dispari</b>",
-            "Stark o Effe, qual è il cognome di Ironman? <b>Stark</b>",
-            "Evans o Hemsworth, quale Chris è Captain America? <b>Evans</b>",
-            "Gatto o Topo, in cosa si trasforma la prof. McGranitt? <b>Gatto</b>",
-            "Di Caprio o Da Vinci, chi ha dipinto la Gioconda? <b>Da Vinci</b>",
-            "Frecce o Lance, cosa usa Katniss Everdeen? <b>Frecce</b>",
-            "Fragole o Bambolina, come si chiama la canzone di Achille Lauro? <b>Fragole</b>",
-            "Fuori o Dentro, dove si trova il mare di Napoli nella famosa fiction? <b>Fuori</b>",
-            "Teresa o Carmela, chi è l’amante di Edoardo? <b>Teresa</b>",
-            "Osso o Orso, cosa significa 'Oso' in spagnolo? <b>Orso</b>",
-            "Holland o Hiddleston, quale Tom è il tuo amichevole Spiderman di quartiere? <b>Holland</b>",
-            "Jacob o Carlisle, chi ha l'imprinting con Renesmee? <b>Jacob</b>",
-            "2009 o 2010, in che anno è nato il gruppo Il Volo? <b>2009</b>",
-            "Malgioglio o Enzo Miccio, chi ha condotto 'Ma come ti vesti'? <b>Enzo Miccio</b>",
-            "Fiordaliso o Fiordipesco, chi è la promessa sposa di Febo? <b>Fiordaliso</b>",
-            "Mahmood o Ghali, quale dei due ha vinto Sanremo con Blanco? <b>Mahmood</b>",
-            "Vanoni o Ferilli, chi è il nostro spirito guida di sempre? <b>Vanoni</b>",
-            "Musical o Cinepanettone, 'Mamma Mia' è un..? <b>Musical</b>"
+            { domanda: "DELLE FEMMINE O DEGLI SCAPOLI, QUALE ISOLA ESISTE DAVVERO?", risposta: "FEMMINE" },
+            { domanda: "GOED O WENT, QUAL È IL PAST SIMPLE DEL VERBO 'TO GO'?", risposta: "WENT" },
+            { domanda: "ASINELLO O CIUCHINO, CHI È L'AMICO DI SHREK?", risposta: "CIUCHINO" },
+            { domanda: "HANKS O CRUISE, CHI INTERPRETA FORREST GUMP?", risposta: "HANKS" },
+            { domanda: "PARI O DISPARI, I 7 NANI SONO?", risposta: "DISPARI" },
+            { domanda: "STARK O EFFE, QUAL È IL COGNOME DI IRONMAN?", risposta: "STARK" },
+            { domanda: "EVANS O HEMSWORTH, QUALE CHRIS È CAPTAIN AMERICA?", risposta: "EVANS" },
+            { domanda: "GATTO O TOPO, IN COSA SI TRASFORMA LA PROF. MCGRANITT?", risposta: "GATTO" },
+            { domanda: "DI CAPRIO O DA VINCI, CHI HA DIPINTO LA GIOCONDA?", risposta: "DA VINCI" },
+            { domanda: "FRECCE O LANCE, COSA USA KATNISS EVERDEEN?", risposta: "FRECCE" },
+            { domanda: "FRAGOLE O BAMBOLINA, COME SI CHIAMA LA CANZONE DI ACHILLE LAURO?", risposta: "FRAGOLE" },
+            { domanda: "FUORI O DENTRO, DOVE SI TROVA IL MARE DI NAPOLI NELLA FAMOSA FICTION?", risposta: "FUORI" },
+            { domanda: "TERESA O CARMELA, CHI È L'AMANTE DI EDOARDO?", risposta: "TERESA" },
+            { domanda: "OSSO O ORSO, COSA SIGNIFICA 'OSO' IN SPAGNOLO?", risposta: "ORSO" },
+            { domanda: "HOLLAND O HIDDLESTON, QUALE TOM È SPIDERMAN?", risposta: "HOLLAND" },
+            { domanda: "JACOB O CARLISLE, CHI HA L'IMPRINTING CON RENESMEE?", risposta: "JACOB" },
+            { domanda: "2009 O 2010, IN CHE ANNO È NATO IL GRUPPO IL VOLO?", risposta: "2009" },
+            { domanda: "MALGIOGLIO O ENZO MICCIO, CHI HA CONDOTTO 'MA COME TI VESTI'?", risposta: "ENZO MICCIO" },
+            { domanda: "FIORDALISO O FIORDIPESCO, CHI È LA PROMESSA SPOSA DI FEBO?", risposta: "FIORDALISO" },
+            { domanda: "MAHMOOD O GHALI, CHI HA VINTO SANREMO CON BLANCO?", risposta: "MAHMOOD" },
+            { domanda: "VANONI O FERILLI, CHI È IL NOSTRO SPIRITO GUIDA?", risposta: "VANONI" },
+            { domanda: "MUSICAL O CINEPANETTONE, 'MAMMA MIA' È UN..?", risposta: "MUSICAL" }
         ];
 
         let corrente = 0;
 
         function mostraDomanda() {
-            document.getElementById("domanda").innerHTML = domande[corrente];
+            const domandaEl = document.getElementById("domanda");
+            const domandaCorrente = domande[corrente];
+            domandaEl.innerHTML = `${domandaCorrente.domanda}<br><strong>${domandaCorrente.risposta}</strong>`;
         }
 
-        function rispondi(corretta) {
-            const box = document.querySelectorAll(".box");
-
-            if (corretta) {
-                box[corrente].classList.add("corretto");
+        function rispondi(esatta) {
+            if (esatta) {
                 corrente++;
                 if (corrente < domande.length) {
                     mostraDomanda();
-                    evidenziaUltima();
                 } else {
-                    alert("🎉 Hai completato il gioco! 🎉");
-                }
-            } else {
-                box[corrente].classList.add("errato");
-                setTimeout(() => {
-                    box.forEach(b => b.classList.remove("corretto", "errato", "ultima-raggiunta"));
                     corrente = 0;
                     mostraDomanda();
-                    evidenziaUltima();
-                }, 1000);
+                }
+            } else {
+                corrente = 0;
+                mostraDomanda();
             }
         }
 
-        function evidenziaUltima() {
-            const box = document.querySelectorAll(".box");
-            box.forEach(b => b.classList.remove("ultima-raggiunta"));
-            if (corrente < box.length) {
-                box[corrente].classList.add("ultima-raggiunta");
-            }
-        }
-
-        function creaGriglia() {
-            const griglia = document.getElementById("griglia");
-            griglia.innerHTML = "";
-
-            for (let i = 0; i < domande.length; i++) {
-                const box = document.createElement("div");
-                box.classList.add("box");
-                box.innerText = i + 1;
-                griglia.appendChild(box);
-            }
-            evidenziaUltima();
-        }
-
-        creaGriglia();
-        mostraDomanda();
+        window.onload = mostraDomanda;
     </script>
-
 </body>
 </html>
