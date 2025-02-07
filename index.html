@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gioco Finale</title>
+    <title>Gioco Finale - Avanti un Cazzo</title>
     <style>
         body {
             text-align: center;
@@ -21,12 +21,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 30px;
+            gap: 30px; /* Aumentato per separare meglio il titolo e le immagini */
         }
         h1 img {
-            max-width: 100px;
-            max-height: 100px;
-            object-fit: contain;
+            max-width: 100px; /* Limita la larghezza massima dell'immagine */
+            max-height: 100px; /* Limita l'altezza massima dell'immagine */
+            object-fit: contain; /* Mantiene il rapporto dell'immagine senza distorsioni */
         }
         #domanda {
             font-size: 24px;
@@ -101,6 +101,7 @@
             background-color: #dc3545;
             color: white;
         }
+        /* Pulsante audio tra corretta e errata */
         .btn-audio {
             padding: 10px 20px;
             font-size: 18px;
@@ -109,6 +110,7 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
         .buttons-container {
             display: flex;
             justify-content: center;
@@ -121,7 +123,7 @@
 
     <h1>
         <img src="avanti.png" alt="Logo sinistro">
-        Gioco Finale
+        Gioco Finale - Avanti un Cazzo
         <img src="avanti.png" alt="Logo destro">
     </h1>
 
@@ -129,27 +131,54 @@
 
     <div id="griglia"></div>
 
+    <!-- Contenitore per i pulsanti centrati -->
     <div class="buttons-container">
         <button class="btn-corretta" onclick="rispondi(true)">✔ Corretta</button>
+        <!-- Pulsante per avviare la musica al centro -->
         <button class="btn-audio" onclick="playAudio()">🎵 Avvia Musica</button>
         <button class="btn-errata" onclick="rispondi(false)">✘ Errata</button>
     </div>
 
+    <!-- Audio -->
     <audio id="musica" src="siglagioco.mp4"></audio>
     <audio id="errore" src="errore.mp4"></audio>
 
     <script>
         let corrente = 0;
-        const domande = [];
+        const domande = [
+            ["Delle Femmine o degli Scapoli, quale isola esiste davvero?", "Scapoli"],
+            ["Goed o Went, qual è il past simple del verbo “to go”?", "Goed"],
+            ["Asinello o Ciuchino, chi è l’amico di Shrek?", "Asinello"],
+            ["Hanks o Cruise, chi interpreta Forrest Gump?", "Cruise"],
+            ["Pari o Dispari, i 7 nani sono?", "Pari"],
+            ["Stark o Effe, qual è il cognome di Ironman?", "Effe"],
+            ["Evans o Hemsworth, quale Chris è Captain America?", "Hemsworth"],
+            ["Gatto o Topo, in cosa si trasforma la prof. Mcgranitt?", "Topo"],
+            ["Di Caprio o Da Vinci, chi ha dipinto la Gioconda?", "Di Caprio"],
+            ["Frecce o Lance, cosa usa Katniss Everdeen?", "Lance"],
+            ["Fragole o Bambolina, come si chiama la canzone di Achille Lauro?", "Bambolina"],
+            ["Fuori o Dentro, dove si trova il mare di Napoli nella famosa fiction?", "Dentro"],
+            ["Teresa o Carmela, chi è l’amante di Edoardo?", "Carmela"],
+            ["Osso o Orso, cosa significa “Oso” in spagnolo?", "Osso"],
+            ["Holland o Hiddleston, quale Tom è il tuo amichevole Spiderman di quartiere?", "Hiddleston"],
+            ["Jacob o Carlisle, chi ha l'imprinting con Renesmee?", "Carlisle"],
+            ["2009 o 2010, in che anno è nato il gruppo Il Volo?", "2010"],
+            ["Malgioglio o Enzo Miccio, chi ha condotto “Ma come ti vesti”?", "Malgioglio"],
+            ["Fiordaliso o Fiordipesco, chi è la promessa sposa di Febo?", "Fiordipesco"],
+            ["Mahmood o Ghali, quale dei due ha vinto Sanremo con Blanco?", "Ghali"],
+            ["Vanoni o Ferilli, chi è il nostro spirito guida di sempre?", "Ferilli"],
+            ["Musical o Cinepanettone, “Mamma Mia” è un...?", "Cinepanettone"]
+        ];
 
         function mostraDomanda() {
-            document.getElementById("domanda").innerHTML = "";
+            document.getElementById("domanda").innerHTML = 
+                `${domande[corrente][0]} <br> <strong style="color: red;">${domande[corrente][1]}</strong>`;
         }
 
         function creaGriglia() {
             const griglia = document.getElementById("griglia");
             griglia.innerHTML = "";
-            for (let i = 0; i < 11; i++) {
+            for (let i = 0; i < domande.length; i++) {
                 const box = document.createElement("div");
                 box.classList.add("box");
                 box.innerText = i + 1;
@@ -162,31 +191,40 @@
             const box = document.querySelectorAll(".box");
 
             if (esatta) {
-                if (corrente < 11) {
+                if (corrente < domande.length) {
                     box[corrente].classList.add("corretto");
                     corrente++;
-                    evidenziaUltima();
-                } else {
-                    alert("🎉 HAI VINTO! 🎉");
+                    if (corrente < domande.length) {
+                        mostraDomanda();
+                        evidenziaUltima();
+                    } else {
+                        alert("🎉 HAI VINTO! 🎉");
+                    }
                 }
             } else {
                 box.forEach(b => b.classList.remove("corretto", "ultima-raggiunta"));
                 corrente = 0;
+                mostraDomanda();
                 evidenziaUltima();
-                document.getElementById("errore").play();
+
+                // Riproduci audio errore
+                const erroreAudio = document.getElementById("errore");
+                erroreAudio.play();
             }
         }
 
         function evidenziaUltima() {
             const box = document.querySelectorAll(".box");
             box.forEach(b => b.classList.remove("ultima-raggiunta"));
-            if (corrente < 11) {
+            if (corrente < domande.length) {
                 box[corrente].classList.add("ultima-raggiunta");
             }
         }
 
+        // Funzione per avviare la musica
         function playAudio() {
-            document.getElementById("musica").play();
+            const audio = document.getElementById("musica");
+            audio.play();
         }
 
         creaGriglia();
